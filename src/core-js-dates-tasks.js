@@ -61,8 +61,19 @@ function getDayName(date) {
  * Date('2024-02-13T00:00:00Z') => Date('2024-02-16T00:00:00Z')
  * Date('2024-02-16T00:00:00Z') => Date('2024-02-23T00:00:00Z')
  */
-function getNextFriday(/* date */) {
-  throw new Error('Not implemented');
+function getNextFriday(date) {
+  const day = date.getDay();
+  let daysToAdd;
+  if (day === 5) {
+    daysToAdd = 7;
+  } else if (day < 5) {
+    daysToAdd = 5 - day;
+  } else {
+    daysToAdd = 12 - day;
+  }
+  const nextFriday = new Date(date);
+  nextFriday.setDate(date.getDate() + daysToAdd);
+  return nextFriday;
 }
 
 /**
@@ -76,10 +87,14 @@ function getNextFriday(/* date */) {
  * 1, 2024 => 31
  * 2, 2024 => 29
  */
-function getCountDaysInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountDaysInMonth(month, year) {
+  const datenow = new Date();
+  datenow.setFullYear(year);
+  datenow.setMonth(month - 1);
+  datenow.setDate(33);
+  return 33 - datenow.getDate();
 }
-
+getCountDaysInMonth(1, 2024);
 /**
  * Returns the total number of days between two dates, including both the start and end dates.
  *
@@ -91,8 +106,12 @@ function getCountDaysInMonth(/* month, year */) {
  * '2024-02-01T00:00:00.000Z', '2024-02-02T00:00:00.000Z'  => 2
  * '2024-02-01T00:00:00.000Z', '2024-02-12T00:00:00.000Z'  => 12
  */
-function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
-  throw new Error('Not implemented');
+function getCountDaysOnPeriod(dateStart, dateEnd) {
+  const stday = new Date(dateStart);
+  const enday = new Date(dateEnd);
+  const time = enday - stday;
+  const period = Math.floor(time / 86400000) + 1;
+  return period;
 }
 
 /**
