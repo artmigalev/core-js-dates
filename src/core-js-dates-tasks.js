@@ -152,10 +152,10 @@ function isDateInPeriod(date, period) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  return new Date(date).toLocaleString('en-US', { timeZone: 'UTC' });
 }
-
+// formatDate('2024-02-01T15:00:00.000Z');
 /**
  * Returns the total number of weekend days (Saturdays and Sundays) in a specified month and year.
  *
@@ -168,8 +168,17 @@ function formatDate(/* date */) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  const days = Array.from({ length: 31 }, (v, i) => i + 1);
+  const date = new Date(year, month);
+  const nameDay = days.map((e) => {
+    date.setDate(e);
+    date.setMonth(month - 1);
+    date.setFullYear(year);
+    return new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
+  });
+
+  return nameDay.filter((d) => d === 'Saturday' || d === 'Sunday').length;
 }
 
 /**
@@ -185,8 +194,11 @@ function getCountWeekendsInMonth(/* month, year */) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  throw new Error('Not implemented');
+function getWeekNumberByDate(date) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+  const yearStart = new Date(d.getFullYear(), 0, 1);
+  return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
 }
 
 /**
@@ -200,8 +212,20 @@ function getWeekNumberByDate(/* date */) {
  * Date(2024, 0, 13) => Date(2024, 8, 13)
  * Date(2023, 1, 1) => Date(2023, 9, 13)
  */
-function getNextFridayThe13th(/* date */) {
-  throw new Error('Not implemented');
+function getNextFridayThe13th(date) {
+  if (date.getDate() >= 13) {
+    const month = date.getMonth();
+    date.setMonth(month + 1);
+  }
+  function varificateDate(dateOLd) {
+    if (dateOLd.getDate() === 13 && dateOLd.getDay() === 5) {
+      return dateOLd;
+    }
+    const day = dateOLd.getDate() + 1;
+    const dateNew = new Date(dateOLd.getFullYear(), dateOLd.getMonth(), day);
+    return varificateDate(dateNew);
+  }
+  return varificateDate(date);
 }
 
 /**
@@ -215,10 +239,11 @@ function getNextFridayThe13th(/* date */) {
  * Date(2024, 5, 1) => 2
  * Date(2024, 10, 10) => 4
  */
-function getQuarter(/* date */) {
-  throw new Error('Not implemented');
+function getQuarter(date) {
+  const month = date.getMonth() + 1;
+  return Math.ceil(month / 3);
 }
-
+// getQuarter(new Date(2024, 1, 13));
 /**
  * Generates an employee's work schedule within a specified date range, based on a pattern of working and off days.
  * The start and end dates of the period are inclusive.
