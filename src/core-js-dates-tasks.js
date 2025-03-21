@@ -243,7 +243,6 @@ function getQuarter(date) {
   const month = date.getMonth() + 1;
   return Math.ceil(month / 3);
 }
-// getQuarter(new Date(2024, 1, 13));
 /**
  * Generates an employee's work schedule within a specified date range, based on a pattern of working and off days.
  * The start and end dates of the period are inclusive.
@@ -262,10 +261,45 @@ function getQuarter(date) {
  * { start: '01-01-2024', end: '15-01-2024' }, 1, 3 => ['01-01-2024', '05-01-2024', '09-01-2024', '13-01-2024']
  * { start: '01-01-2024', end: '10-01-2024' }, 1, 1 => ['01-01-2024', '03-01-2024', '05-01-2024', '07-01-2024', '09-01-2024']
  */
-function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
-  throw new Error('Not implemented');
-}
+//   0            1            2                3       4
+// //
+// function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
+// const reverseDate = (date) => date.split('-').reverse().join('-');
+// const date1 = new Date(reverseDate(period.start));
+// const date2 = new Date(reverseDate(period.end));
 
+// const lengthDay = (date2 - date1) / 86400000 + 1;
+
+// console.log(Math.floor(lengthDay / (countOffDays + countWorkDays)));
+
+// const result = Array.from(
+//   { length: Math.ceil(lengthDay / (countOffDays + countWorkDays)) },
+//   (_, i) => {
+//     for (q = 0; q < countWorkDays; q++) {
+//       if (i !== 0) {
+//         i = countOffDays + countOffDays;
+//       }
+//       console.log(i, q);
+//       const day = date1.setDate(date1.getDate() + (i + q));
+
+//       const result = new Intl.DateTimeFormat('ru', {
+//         day: '2-digit',
+//         month: '2-digit',
+//         year: 'numeric',
+//       }).format(day);
+//       return result.replaceAll('.', '-');
+//     }
+//   }
+// );
+// console.log(result);
+// return result;
+// throw Error;
+// }
+// getWorkSchedule(
+//   getWorkSchedule({ start: '01-01-2024', end: '15-01-2024' }, 1, 3),
+//   getWorkSchedule({ start: '01-01-2024', end: '10-01-2024' }, 1, 1),
+//   getWorkSchedule({ start: '01-01-2024', end: '29-02-2024' }, 2, 2)
+// ),
 /**
  * Determines whether the year in the provided date is a leap year.
  * A leap year is a year divisible by 4, but not by 100, unless it is also divisible by 400.
@@ -278,10 +312,14 @@ function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
  * Date(2022, 2, 1) => false
  * Date(2020, 2, 1) => true
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const startYear = new Date(date.getFullYear(), 0, 1);
+  const endYear = new Date(date.getFullYear(), 12, 0);
+  const days = (endYear - startYear) / 86400000 + 1;
+  if (days === 366) return true;
+  return false;
 }
-
+// isLeapYear(new Date(2022, 2, 1));
 module.exports = {
   dateToTimestamp,
   getTime,
@@ -295,6 +333,6 @@ module.exports = {
   getWeekNumberByDate,
   getNextFridayThe13th,
   getQuarter,
-  getWorkSchedule,
+  // getWorkSchedule,
   isLeapYear,
 };
